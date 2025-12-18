@@ -1,0 +1,169 @@
+/* src/index.css — 背景敷き詰め版 */
+
+/* ============================
+   Tailwind entry points
+   ============================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================
+   Root variables (theme tokens)
+   変更したければここだけ書き換える
+   ============================ */
+:root {
+  --paper: #fbf7ef;
+  --ink: #2b2b2b;
+}
+
+/* Utility helpers mapped to tokens */
+.bg-paper { background-color: var(--paper); }
+.text-ink { color: var(--ink); }
+
+/* ============================
+   Background: manuscript (原稿用紙)
+   - public/project/manuscript.png 想定
+   - 一面に敷き詰めて表示する設定
+   ============================ */
+.manuscript-bg {
+  /* 装飾画像を直接ここで指定（App.tsxでも inline していた場合は重複に注意） */
+  background-image: url('/project/manuscript.png');
+
+  /* 敷き詰め表示（タイル状に繰り返す） */
+  background-repeat: repeat;
+  background-position: center top; /* 縦方向は top を基準にするのが自然 */
+  background-size: auto;           /* 自然なサイズのまま繰り返す */
+
+  /* 見た目調整 */
+  opacity: 0.22;
+  filter: saturate(0.85) contrast(0.95);
+
+  /* 装飾なので操作対象外に */
+  pointer-events: none;
+
+  /* フォールバック（背景が読み込まれるまでの紙色） */
+  background-color: var(--paper);
+}
+
+/* 紙っぽい微細テクスチャ（任意で組み合わせて使用） */
+.paper-bg {
+  background-image: radial-gradient(rgba(0,0,0,0.01) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ============================
+   Typography / Reading styles
+   - 行長・行間は読みやすさ重視
+   ============================ */
+.max-reading { max-width: 60ch; } /* utility to constrain line length */
+
+.reading-paragraph {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  font-family: 'Noto Serif JP', serif;
+}
+
+/* 章見出し装飾（SVG等を当てる領域） */
+.chapter-ornament {
+  width: 48px;
+  height: 10px;
+  margin: 1.25rem auto;
+  opacity: 0.85;
+}
+
+/* ============================
+   縦書きスタイル（Intro / 自己紹介用）
+   - モバイルでは自動で横書きに戻す
+   ============================ */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  line-height: 2.2;
+  letter-spacing: 0.15em;
+  font-family: 'Noto Serif JP', serif;
+}
+
+/* モバイル向け切替 */
+@media (max-width: 768px) {
+  .vertical-text {
+    writing-mode: horizontal-tb;
+    letter-spacing: 0.02em;
+    line-height: 1.9;
+  }
+
+  /* 背景をさらに薄くして本文優先にする */
+  .manuscript-bg { opacity: 0.14 !important; }
+}
+
+/* ============================
+   Small accessibility helpers
+   ============================ */
+/* sr-only: スクリーンリーダー専用（Tailwind の sr-only と同様） */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* スキップリンク専用スタイル（フォーカス時に表示） */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus,
+.skip-link:active {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.5rem;
+  z-index: 50;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 互換性：App.tsx が .sr-only を参照する場合に備えて */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip: auto;
+  overflow: visible;
+}
+
+/* ============================
+   App / layout helpers
+   ============================ */
+/* IntroVertical の見栄え調整 */
+.intro-vertical-wrapper {
+  padding-top: 3.25rem;
+  padding-bottom: 3.25rem;
+}
+
+/* Hero / section の上下マージンをシンプルに調整 */
+.section-stack + .section-stack {
+  margin-top: 0.5rem;
+}
+
+/* モバイルでヘッダー sticky が邪魔なら縮める */
+@media (max-width: 640px) {
+  .sticky.top-4 { top: 0.5rem; }
+  .intro-vertical-wrapper { padding-top: 2rem; padding-bottom: 2rem; }
+}
