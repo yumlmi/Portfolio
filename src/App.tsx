@@ -1,8 +1,12 @@
 import React, { Suspense, lazy, useEffect } from 'react'
 import Header from './components/Header'
-import Hero from './components/Hero'
 import Section from './components/Section'
 import IntroVertical from './components/IntroVertical'
+import Summary from './components/Summary'
+import Achievements from './components/Achievements'
+import Events from './components/Events'
+import Skills from './components/Skills'
+import Contact from './components/Contact'
 import './index.css'
 
 // Projects を遅延読み込み（重ければ効果大）
@@ -45,14 +49,12 @@ const App: React.FC = () => {
       <main id="main-content" className="relative z-10">
         <IntroVertical />
 
-        <Hero />
-
-        <Section id="projects" aria-labelledby="projects-heading">
-          <h2 id="projects-heading" className="sr-only">Projects</h2>
-          <Suspense fallback={<div className="py-8 text-center">Loading projects…</div>}>
-            <Projects />
-          </Suspense>
-        </Section>
+        <Projects />
+        <Summary />
+        <Achievements />
+        <Events />
+        <Skills />
+        <Contact />
       </main>
 
       <footer className="relative z-10 text-center text-sm py-8 text-ink/60">
