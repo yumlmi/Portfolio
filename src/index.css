@@ -1,5 +1,3 @@
-/* src/index.css — 背景敷き詰め版 */
-
 /* ============================
    Tailwind entry points
    ============================ */
@@ -8,100 +6,209 @@
 @tailwind utilities;
 
 /* ============================
-   Root variables (theme tokens)
-   変更したければここだけ書き換える
+   Theme tokens / spacing / type
    ============================ */
-:root {
+:root{
   --paper: #fbf7ef;
   --ink: #2b2b2b;
+  --muted: rgba(0,0,0,0.6);
+  --paper-overlay: rgba(255,255,255,0.92);
+
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --reading-width: 60ch;
+
+  --line-height-compact: 1.6;
+  --line-height-loose: 1.9;
 }
 
-/* Utility helpers mapped to tokens */
+/* helper utilities kept for compatibility */
 .bg-paper { background-color: var(--paper); }
 .text-ink { color: var(--ink); }
 
 /* ============================
-   Background: manuscript (原稿用紙)
-   - public/project/manuscript.png 想定
-   - 一面に敷き詰めて表示する設定
+   Global typography tweaks
    ============================ */
-.manuscript-bg {
-  /* 装飾画像を直接ここで指定（App.tsxでも inline していた場合は重複に注意） */
-  background-image: url('/project/manuscript.png');
-
-  /* 敷き詰め表示（タイル状に繰り返す） */
-  background-repeat: repeat;
-  background-position: center top; /* 縦方向は top を基準にするのが自然 */
-  background-size: auto;           /* 自然なサイズのまま繰り返す */
-
-  /* 見た目調整 */
-  opacity: 0.22;
-  filter: saturate(0.85) contrast(0.95);
-
-  /* 装飾なので操作対象外に */
-  pointer-events: none;
-
-  /* フォールバック（背景が読み込まれるまでの紙色） */
+html, body {
   background-color: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Noto Serif JP", serif;
 }
 
-/* 紙っぽい微細テクスチャ（任意で組み合わせて使用） */
+/* Reading helpers */
+.max-reading { max-width: var(--reading-width); }
+.reading-paragraph {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
+  line-height: var(--line-height-loose);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  font-family: 'Noto Serif JP', serif;
+}
+
+/* Chapter ornament (kept) */
+.chapter-ornament {
+  width: 48px;
+  height: 10px;
+  margin: 1.25rem auto;
+  opacity: 0.9;
+}
+
+/* ============================
+   Manuscript background (原稿用紙)
+   - Use image-set for modern formats with fallback
+   - Keep tiled repeat; reduce opacity on small screens
+   ============================ */
+.manuscript-bg {
+  background-color: var(--paper); /* fallback */
+  background-image:
+    image-set(
+      url('/project/manuscript.webp') type('image/webp'),
+      url('/project/manuscript.avif') type('image/avif'),
+      url('/project/manuscript.png') type('image/png')
+    );
+  background-repeat: repeat;
+  background-position: center top;
+  background-size: auto;
+  opacity: 0.22;
+  filter: saturate(0.88) contrast(0.96);
+  pointer-events: none;
+}
+
+/* mobile: prefer lighter manuscript overlay and a smaller file if available */
+@media (max-width: 640px) {
+  .manuscript-bg {
+    opacity: 0.14 !important;
+    background-image: image-set(
+      url('/project/manuscript-small.webp') type('image/webp'),
+      url('/project/manuscript-small.png') type('image/png'),
+      url('/project/manuscript.png') type('image/png')
+    );
+  }
+}
+
+/* optional subtle paper texture layer (stackable) */
 .paper-bg {
   background-image: radial-gradient(rgba(0,0,0,0.01) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 /* ============================
-   Typography / Reading styles
-   - 行長・行間は読みやすさ重視
-   ============================ */
-.max-reading { max-width: 60ch; } /* utility to constrain line length */
-
-.reading-paragraph {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  line-height: 1.9;
-  letter-spacing: 0.01em;
-  color: var(--ink);
-  font-family: 'Noto Serif JP', serif;
-}
-
-/* 章見出し装飾（SVG等を当てる領域） */
-.chapter-ornament {
-  width: 48px;
-  height: 10px;
-  margin: 1.25rem auto;
-  opacity: 0.85;
-}
-
-/* ============================
-   縦書きスタイル（Intro / 自己紹介用）
-   - モバイルでは自動で横書きに戻す
+   Vertical text improvements
+   - Preserve vertical for Intro/Projects/Events/Skills etc.
+   - Use text-orientation: upright for better glyph handling in Japanese
+   - Improve spacing and hyphenation fallbacks
    ============================ */
 .vertical-text {
   writing-mode: vertical-rl;
-  text-orientation: mixed;
-  line-height: 2.2;
-  letter-spacing: 0.15em;
+  text-orientation: upright; /* better for Japanese glyphs */
+  line-height: 2.25;        /* generous vertical rhythm */
+  letter-spacing: 0.14em;
   font-family: 'Noto Serif JP', serif;
+  white-space: nowrap;      /* keep blocks from wrapping oddly in vertical flow */
+  hyphens: none;
+  -webkit-hyphens: none;
+  word-break: normal;
+  /* ensure vertical text doesn't get clipped by overflow */
+  overflow-wrap: normal;
+  word-wrap: normal;
+  -webkit-line-break: normal;
 }
 
-/* モバイル向け切替 */
-@media (max-width: 768px) {
-  .vertical-text {
-    writing-mode: horizontal-tb;
-    letter-spacing: 0.02em;
-    line-height: 1.9;
-  }
+/* Slightly denser style for project titles (vertical) */
+.vertical-project-title {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  line-height: 1.65;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  transform-origin: center;
+  white-space: nowrap;
+}
 
-  /* 背景をさらに薄くして本文優先にする */
-  .manuscript-bg { opacity: 0.14 !important; }
+/* Layout helper for title + english label */
+.project-title-wrap {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+/* Mobile fallback: switch to horizontal reading, but keep spacing readable */
+@media (max-width: 768px) {
+  .vertical-text,
+  .vertical-project-title {
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    letter-spacing: 0.02em;
+    line-height: var(--line-height-loose);
+    white-space: normal;
+    hyphens: auto; /* allow breaking on mobile if needed */
+  }
 }
 
 /* ============================
-   Small accessibility helpers
+   Projects grid / cards (微調整)
+   - keep original look but improve spacing & accessibility
    ============================ */
-/* sr-only: スクリーンリーダー専用（Tailwind の sr-only と同様） */
+.projects-wrap {
+  /* placeholder for future root-level styles */
+}
+
+.projects-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  align-items: start;
+}
+
+.project-card {
+  background: var(--paper-overlay);
+  border: 1px solid rgba(0,0,0,0.04);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  transition: transform .18s ease, box-shadow .18s ease;
+  will-change: transform;
+}
+.project-card:focus-within,
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* tech tag */
+.project-tech {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: rgba(0,0,0,0.03);
+  padding: 0.2rem 0.4rem;
+  border-radius: 999px;
+}
+
+/* skeleton */
+.projects-skeleton {
+  background: var(--paper);
+  padding: 1.25rem;
+}
+.projects-skeleton .line {
+  height: 12px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+/* Responsive: force single column on narrow screens */
+@media (max-width: 640px) {
+  .projects-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================
+   Accessibility helpers
+   ============================ */
+/* sr-only (Tailwind-compatible) */
 .sr-only {
   position: absolute !important;
   width: 1px;
@@ -114,7 +221,7 @@
   border: 0;
 }
 
-/* スキップリンク専用スタイル（フォーカス時に表示） */
+/* skip-link: provide a class that shows on focus (kept for compatibility) */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -132,12 +239,12 @@
   background: var(--paper);
   color: var(--ink);
   padding: 0.5rem;
-  z-index: 50;
+  z-index: 60;
   border-radius: 0.25rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* 互換性：App.tsx が .sr-only を参照する場合に備えて */
+/* sr-only-focusable (互換) */
 .sr-only-focusable:focus,
 .sr-only-focusable:active {
   position: static;
@@ -148,22 +255,48 @@
   overflow: visible;
 }
 
+/* Focus ring for interactive elements (sensible default, respects dark/light via var) */
+:focus {
+  outline: none;
+}
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(43,43,43,0.12);
+  border-radius: 6px;
+}
+
 /* ============================
-   App / layout helpers
+   Layout helpers / spacing
    ============================ */
-/* IntroVertical の見栄え調整 */
 .intro-vertical-wrapper {
   padding-top: 3.25rem;
   padding-bottom: 3.25rem;
 }
 
-/* Hero / section の上下マージンをシンプルに調整 */
 .section-stack + .section-stack {
   margin-top: 0.5rem;
 }
 
-/* モバイルでヘッダー sticky が邪魔なら縮める */
-@media (max-width: 640px) {
-  .sticky.top-4 { top: 0.5rem; }
-  .intro-vertical-wrapper { padding-top: 2rem; padding-bottom: 2rem; }
+/* sticky header tweak (mobile) */
+.sticky.top-4 { top: 0.5rem; }
+
+/* ============================
+   Reduced motion preference
+   ============================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
+
+/* ============================
+   Misc / future-ready notes
+   - keep this at the end for easy additions
+   ============================ */
+
+/* End of file */
