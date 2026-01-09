@@ -8,11 +8,11 @@
 /* ============================
    Theme tokens / spacing / type
    ============================ */
-:root{
+:root {
   --paper: #fbf7ef;
   --ink: #2b2b2b;
-  --muted: rgba(0,0,0,0.6);
-  --paper-overlay: rgba(255,255,255,0.92);
+  --muted: rgba(0, 0, 0, 0.6);
+  --paper-overlay: rgba(255, 255, 255, 0.92);
 
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -24,13 +24,18 @@
 }
 
 /* helper utilities kept for compatibility */
-.bg-paper { background-color: var(--paper); }
-.text-ink { color: var(--ink); }
+.bg-paper {
+  background-color: var(--paper);
+}
+.text-ink {
+  color: var(--ink);
+}
 
 /* ============================
    Global typography tweaks
    ============================ */
-html, body {
+html,
+body {
   background-color: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -39,14 +44,16 @@ html, body {
 }
 
 /* Reading helpers */
-.max-reading { max-width: var(--reading-width); }
+.max-reading {
+  max-width: var(--reading-width);
+}
 .reading-paragraph {
   margin-top: var(--space-md);
   margin-bottom: var(--space-md);
   line-height: var(--line-height-loose);
   letter-spacing: 0.01em;
   color: var(--ink);
-  font-family: 'Noto Serif JP', serif;
+  font-family: "Noto Serif JP", serif;
 }
 
 /* Chapter ornament (kept) */
@@ -64,12 +71,11 @@ html, body {
    ============================ */
 .manuscript-bg {
   background-color: var(--paper); /* fallback */
-  background-image:
-    image-set(
-      url('/project/manuscript.webp') type('image/webp'),
-      url('/project/manuscript.avif') type('image/avif'),
-      url('/project/manuscript.png') type('image/png')
-    );
+  background-image: image-set(
+    url("/project/manuscript.webp") type("image/webp"),
+    url("/project/manuscript.avif") type("image/avif"),
+    url("/project/manuscript.png") type("image/png")
+  );
   background-repeat: repeat;
   background-position: center top;
   background-size: auto;
@@ -83,16 +89,16 @@ html, body {
   .manuscript-bg {
     opacity: 0.14 !important;
     background-image: image-set(
-      url('/project/manuscript-small.webp') type('image/webp'),
-      url('/project/manuscript-small.png') type('image/png'),
-      url('/project/manuscript.png') type('image/png')
+      url("/project/manuscript-small.webp") type("image/webp"),
+      url("/project/manuscript-small.png") type("image/png"),
+      url("/project/manuscript.png") type("image/png")
     );
   }
 }
 
 /* optional subtle paper texture layer (stackable) */
 .paper-bg {
-  background-image: radial-gradient(rgba(0,0,0,0.01) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.01) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
@@ -105,10 +111,10 @@ html, body {
 .vertical-text {
   writing-mode: vertical-rl;
   text-orientation: upright; /* better for Japanese glyphs */
-  line-height: 2.25;        /* generous vertical rhythm */
+  line-height: 2.25; /* generous vertical rhythm */
   letter-spacing: 0.14em;
-  font-family: 'Noto Serif JP', serif;
-  white-space: nowrap;      /* keep blocks from wrapping oddly in vertical flow */
+  font-family: "Noto Serif JP", serif;
+  white-space: nowrap; /* keep blocks from wrapping oddly in vertical flow */
   hyphens: none;
   -webkit-hyphens: none;
   word-break: normal;
@@ -166,24 +172,24 @@ html, body {
 
 .project-card {
   background: var(--paper-overlay);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-  transition: transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
   will-change: transform;
 }
 .project-card:focus-within,
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 
 /* tech tag */
 .project-tech {
   font-size: 0.75rem;
   color: var(--muted);
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.03);
   padding: 0.2rem 0.4rem;
   border-radius: 999px;
 }
@@ -195,14 +201,16 @@ html, body {
 }
 .projects-skeleton .line {
   height: 12px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 6px;
   margin-bottom: 0.75rem;
 }
 
 /* Responsive: force single column on narrow screens */
 @media (max-width: 640px) {
-  .projects-grid { grid-template-columns: 1fr; }
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============================
@@ -241,7 +249,7 @@ html, body {
   padding: 0.5rem;
   z-index: 60;
   border-radius: 0.25rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* sr-only-focusable (互換) */
@@ -263,7 +271,7 @@ a:focus,
 button:focus,
 input:focus,
 textarea:focus {
-  box-shadow: 0 0 0 3px rgba(43,43,43,0.12);
+  box-shadow: 0 0 0 3px rgba(43, 43, 43, 0.12);
   border-radius: 6px;
 }
 
@@ -280,7 +288,9 @@ textarea:focus {
 }
 
 /* sticky header tweak (mobile) */
-.sticky.top-4 { top: 0.5rem; }
+.sticky.top-4 {
+  top: 0.5rem;
+}
 
 /* ============================
    Reduced motion preference
@@ -300,3 +310,299 @@ textarea:focus {
    ============================ */
 
 /* End of file */
+
+/* ============================
+   Events timeline (年表・線のみ)
+   ============================ */
+
+.events-timeline {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 上下の横線 */
+.timeline-line {
+  height: 2px;
+  background: currentColor;
+  opacity: 0.85;
+}
+.timeline-line.top {
+  margin-bottom: 2.5rem;
+}
+.timeline-line.bottom {
+  margin-top: 5rem;
+}
+
+/* 年の並び */
+.timeline-years {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4rem;
+  justify-items: center;
+}
+
+/* 各年の列 */
+.timeline-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 年（横書き） */
+.timeline-year {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.08em;
+}
+
+/* 縦の出来事 */
+.timeline-vertical {
+  line-height: 2.1;
+  letter-spacing: 0.12em;
+}
+
+/* 特定の行だけ少し下げる */
+.timeline-offset {
+  display: inline-block;
+  margin-top: 2.8em; /* ← ここを微調整 */
+}
+
+/* 年と内容の間の区切り線 */
+.timeline-divider {
+  width: 9rem; /* 線の長さ */
+  height: 1.5px; /* 線の太さ */
+  background: currentColor;
+  opacity: 0.5;
+  margin-bottom: 1.5rem;
+}
+
+/* ============================
+   Open book background
+   ============================ */
+
+body {
+  background: transparent;
+}
+
+/* BookFlip root (background layer) */
+.bookflip-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -15;
+}
+
+/* scene */
+.bookflip-scene {
+  position: absolute;
+  left: 50%;
+  top: clamp(12vh, 15vh, 18vh);
+  transform: translateX(-50%);
+  width: min(1100px, 92vw);
+  height: min(640px, 80vh);
+  perspective: 1800px;
+  pointer-events: none;
+}
+
+/* page base */
+.book-page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  box-sizing: border-box;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* LEFT page: pivot at right edge, flip +180deg to advance */
+.book-page-left {
+  left: 0;
+  transform-origin: right center; /* pivot on right */
+  transform: rotateY(0deg);
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 350ms ease;
+}
+.book-page-left.flipped {
+  transform: rotateY(180deg);
+  /* subtle shadow while flipping */
+  box-shadow: 60px 8px 80px rgba(0, 0, 0, 0.06);
+}
+
+/* RIGHT page: pivot at left edge, flip -180deg to go back */
+.book-page-right {
+  right: 0;
+  transform-origin: left center; /* pivot on left */
+  transform: rotateY(0deg);
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 350ms ease;
+}
+.book-page-right.flipped {
+  transform: rotateY(-180deg);
+  box-shadow: -60px 12px 80px rgba(0, 0, 0, 0.06);
+}
+
+/* page inner remains paper so text reads well */
+.page-inner {
+  width: 100%;
+  height: 100%;
+  padding: 3.5rem;
+  box-sizing: border-box;
+  transform: translateZ(1px);
+  pointer-events: none;
+  background: rgba(251, 247, 239, 0.98);
+}
+
+/* central seam */
+.bookflip-scene::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-1px);
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.06),
+    rgba(0, 0, 0, 0.08) 40%,
+    rgba(0, 0, 0, 0.06) 60%,
+    rgba(0, 0, 0, 0.04)
+  );
+  filter: blur(0.2px);
+  opacity: 0.85;
+}
+.bookflip-scene::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% + 2px);
+  width: 1px;
+  transform: translateX(-0.5px);
+  z-index: 6;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.22);
+  opacity: 0.6;
+}
+
+/* controls portal (kept high) */
+.book-controls-portal {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  pointer-events: auto;
+  z-index: 9999;
+}
+.book-controls-inner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.book-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.book-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* reduced motion */
+.reduced-motion .book-page-left,
+.reduced-motion .book-page-right {
+  transition: none !important;
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-page-left,
+  .book-page-right {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* mobile tweaks */
+@media (max-width: 640px) {
+  .bookflip-scene {
+    top: 10vh;
+  }
+  .book-controls-portal {
+    bottom: 0.9rem;
+    right: 0.9rem;
+  }
+  .bookflip-scene::after {
+    width: 1px;
+    transform: translateX(-0.5px);
+    opacity: 0.9;
+  }
+}
+
+/* ポータルに出すコントロールのスタイル（確実に前面） */
+.book-controls-portal {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem; /* 右下に配置 */
+  left: auto;
+  transform: none;
+  pointer-events: auto;
+  z-index: 9999; /* 十分に前面 */
+}
+
+.book-controls-inner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.book-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.book-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.bookflip-scene::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-1px);
+  background: rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}

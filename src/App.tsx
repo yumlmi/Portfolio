@@ -1,39 +1,44 @@
-// App.tsx
-import React, { Suspense, lazy, useEffect } from 'react'
-import Header from './components/Header'
-import IntroVertical from './components/IntroVertical'
-import Skills from './components/Skills'
-import Contact from './components/Contact'
-import './index.css'
+import React, { Suspense, lazy, useEffect } from "react";
+import { ASSETS } from "./constants/assets";
+import Header from "./components/Header";
+import IntroVertical from "./components/IntroVertical";
+import Skills from "./components/Skills";
+import Contact from "./components/Contact";
+import BookFlip from "./components/BookFlip";
+import "./index.css";
 
-// 重めのページパーツは遅延ロード（必要に応じて追加）
-const Projects = lazy(() => import('./components/Projects'))
-const Events = lazy(() => import('./components/Events'))
+const Projects = lazy(() => import("./components/Projects"));
+const Events = lazy(() => import("./components/Events"));
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 
 const App: React.FC = () => {
-  // 背景画像プリロード（new Image + rel=preload のハイブリッド）
   useEffect(() => {
-    // 1) new Image() で早期キャッシュ
-    const img = new Image()
-    img.src = '/project/manuscript.png'
-    // 非同期デコード（軽い最適化）
-    // @ts-ignore - decoding may not exist on older TS lib types
-    if (typeof img.decoding !== 'undefined') img.decoding = 'async'
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
 
-    // 2) ブラウザ優先度を上げるため <link rel="preload">
-    const link = document.createElement('link')
-    link.rel = 'preload'
-    link.as = 'image'
-    link.href = '/project/manuscript.png'
-    document.head.appendChild(link)
+    // preload link
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = ASSETS.manuscript;
+    document.head.appendChild(link);
+
+    // warm image cache
+    const img = new Image();
+    img.src = ASSETS.manuscript;
+    if ("decoding" in img) {
+      // 型定義の都合で必要
+      // @ts-ignore
+      img.decoding = "async";
+    }
 
     return () => {
-      // クリーンアップ
-      if (link.parentNode) link.parentNode.removeChild(link)
-    }
-  }, [])
+      if (link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative min-h-screen text-ink overflow-hidden">
@@ -55,7 +60,11 @@ const App: React.FC = () => {
         role="presentation"
       />
 
-      {/* 読みやすさ用オーバーレイ */}
+      {/* ---------- ここに BookFlip を置きます（manuscript-bg と overlay の間） ---------- */}
+      <BookFlip />
+      {/* ------------------------------------------------------------------------------- */}
+
+      {/* 読みやすさ用オーバーレイ（ここで紙色を指定） */}
       <div className="absolute inset-0 -z-10 bg-paper/92" aria-hidden="true" />
 
       <Header />
@@ -63,8 +72,9 @@ const App: React.FC = () => {
       <main id="main-content" className="relative z-10" tabIndex={-1}>
         <IntroVertical />
 
-        {/* 遅延ロードされたコンポーネントは Suspense で包む */}
-        <Suspense fallback={<div className="py-12 text-center">Loading...</div>}>
+        <Suspense
+          fallback={<div className="py-12 text-center">Loading...</div>}
+        >
           <Projects />
           <Events />
         </Suspense>
@@ -77,7 +87,7 @@ const App: React.FC = () => {
         © {currentYear} Yumi Yamashita
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
