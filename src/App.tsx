@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useEffect } from "react";
+import { usePrefetchAssets } from "./hooks/usePrefetchAssets";
 import { ASSETS } from "./constants/assets";
 import Header from "./components/Header";
 import IntroVertical from "./components/IntroVertical";
@@ -13,32 +14,15 @@ const Events = lazy(() => import("./components/Events"));
 const currentYear = new Date().getFullYear();
 
 const App: React.FC = () => {
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined")
-      return;
-
-    // preload link
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.href = ASSETS.manuscript;
-    document.head.appendChild(link);
-
-    // warm image cache
-    const img = new Image();
-    img.src = ASSETS.manuscript;
-    if ("decoding" in img) {
-      // 型定義の都合で必要
-      // @ts-ignore
-      img.decoding = "async";
-    }
-
-    return () => {
-      if (link.parentNode) {
-        link.parentNode.removeChild(link);
-      }
-    };
-  }, []);
+  usePrefetchAssets([
+    {
+      href: ASSETS.manuscriptAvif, // preferred
+      as: "image",
+      rel: "preload",
+      decode: true,
+      altFormats: [ASSETS.manuscriptWebp, ASSETS.manuscript], // webp, png fallback
+    },
+  ]);
 
   return (
     <div className="relative min-h-screen text-ink overflow-hidden">
@@ -53,11 +37,14 @@ const App: React.FC = () => {
       {/* 原稿用紙 背景（装飾）。スクリーンリーダーには非表示 */}
       <div
         className="absolute inset-0 -z-20 manuscript-bg"
-        style={{
-          backgroundImage: `url('/project/manuscript.png')`,
-        }}
         aria-hidden="true"
         role="presentation"
+      />
+
+      <div
+        className="absolute inset-0 -z-10"
+        aria-hidden="true"
+        style={{ backgroundColor: "rgba(251, 247, 239, 0.60)" }}
       />
 
       {/* ---------- ここに BookFlip を置きます（manuscript-bg と overlay の間） ---------- */}

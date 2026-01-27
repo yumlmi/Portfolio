@@ -1,25 +1,23 @@
 // src/hooks/usePrefetchAssets.ts
 import { useEffect } from "react";
 
-type AssetDescriptor = {
+export type AssetDescriptor = {
   href: string;
   as?: string; // 'image' | 'script' | 'style' ...
-  rel?: "preload" | "prefetch"; // default: preload
+  rel?: "preload" | "prefetch";
   decode?: boolean; // whether to create Image() and set decoding if supported (image only)
+  altFormats?: string[]; // other format URLs for images (e.g. [webp, png]) to include in imagesrcset
 };
 
 type Options = {
-  enabled?: boolean; // allow disabling in tests or SSR
+  enabled?: boolean;
 };
 
 /**
  * usePrefetchAssets
  * - Safe for SSR (does nothing when document/window undefined)
  * - Adds <link rel="preload|prefetch" as="..." href="..."> to head for each asset
- * - Optionally warms image via new Image()
- *
- * Usage:
- * usePrefetchAssets([{ href: ASSETS.manuscript, as: 'image' }]);
+ * - If altFormats provided for an image, sets imagesrcset on a single preload link so browser can choose
  */
 export function usePrefetchAssets(
   assets: AssetDescriptor[] | undefined,
@@ -35,14 +33,26 @@ export function usePrefetchAssets(
     const createdImages: HTMLImageElement[] = [];
 
     for (const a of assets) {
-      // create link
       const link = document.createElement("link");
       link.rel = a.rel ?? "preload";
-      if (a.as) link.as = a.as;
+      link.as = (a.as as string) ?? "image";
       link.href = a.href;
+
+      // If altFormats provided, build imagesrcset so a single preload covers alternatives
+      if (Array.isArray(a.altFormats) && a.altFormats.length > 0) {
+        // build srcset string: "preferred.avif 1x, alt.webp 1x, fallback.png 1x"
+        const items = [a.href, ...a.altFormats].map((u) => `${u} 1x`);
+        // imagesrcset is not well-typed on HTMLLinkElement across lib versions, so cast to any
+        (link as any).imagesrcset = items.join(", ");
+        // optional: set imagesizes if you know expected display size
+        // (link as any).imagesizes = '100vw';
+      }
+
       // avoid duplicate preloads by checking existing
       const exists = Array.from(document.head.querySelectorAll("link")).some(
-        (l) => l.href === link.href && l.rel === link.rel
+        (l) =>
+          l.getAttribute("href") === link.href &&
+          l.getAttribute("rel") === link.rel
       );
       if (!exists) {
         document.head.appendChild(link);
@@ -50,16 +60,16 @@ export function usePrefetchAssets(
       }
 
       // optionally warm image cache (for images)
-      if (
-        (a.as === "image" || /\.png$|\.jpe?g$|\.webp$|\.avif$/i.test(a.href)) &&
-        a.decode
-      ) {
+      const isImage =
+        a.as === "image" ||
+        /\.(png|jpe?g|webp|avif|gif)$/i.test(a.href) ||
+        (Array.isArray(a.altFormats) && a.altFormats.length > 0);
+      if (isImage && a.decode) {
         try {
           const img = new Image();
           img.src = a.href;
-          // decoding is not on typings in some environments
           if ("decoding" in img) {
-            img.decoding = "async";
+            (img as any).decoding = "async";
           }
           createdImages.push(img);
         } catch (e) {
@@ -69,11 +79,10 @@ export function usePrefetchAssets(
     }
 
     return () => {
-      // cleanup created links
       for (const l of createdLinks) {
         if (l.parentNode) l.parentNode.removeChild(l);
       }
-      // drop references to images so GC can collect
+      // allow GC for warmed images
       createdImages.length = 0;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
