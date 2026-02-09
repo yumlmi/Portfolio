@@ -1,0 +1,336 @@
+/* 全体はそのまま */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-image: url("./assets/backgraund.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: "Montserrat", "Noto Sans JP", sans-serif;
+}
+
+/* 背景薄化レイヤー */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 親コンテナ（中央に置く箱） */
+.hero-layer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+
+  width: min(1300px, 95vw); /* 親幅を明示しておくのが重要 */
+  max-width: 1300px;
+  overflow: visible;
+}
+
+/* overlay は親幅にフィットさせる（imgの場合） */
+.overlay {
+  display: block;
+  width: 100%; /* 親の幅いっぱいに */
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ===== profile（overlay の上に重ねる） ===== */
+.profile {
+  position: absolute; /* hero-layer を基準に重ねる */
+  top: 20%; /* 好きな位置に調整 */
+  left: 15%; /* 親幅の左から 6% に合わせる（微調整用） */
+  z-index: 30;
+
+  text-align: left;
+  margin-top: 0.8rem;
+
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: #666;
+
+  /* 幅制限を入れると行折れが安定 */
+  max-width: 48%;
+  box-sizing: border-box;
+}
+
+.profile-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+
+  color: #a97812; /* 今のゴールド */
+
+  margin-bottom: 1.5rem;
+}
+
+.profile-title::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 1px;
+  margin-top: 0.6rem;
+  background: rgba(169, 120, 18, 0.6); /* 今のゴールド */
+}
+
+/* 名前ブロック */
+.name-block {
+  margin-bottom: 0.2rem; /* 今より 2〜4px 詰める */
+}
+
+/* 漢字（目立たせつつ沈める） */
+.name-ja {
+  font-family: "Noto Sans JP", "Montserrat", sans-serif;
+
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+
+  color: #555;
+
+  line-height: 1.05;
+  margin: 0;
+}
+
+/* ローマ字（ふりがな） */
+.name-en {
+  margin-top: 0.4rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  color: #666;
+  margin-bottom: 2.5rem;
+}
+
+/* 役割（職種） */
+.role {
+  margin-top: 0.2rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.stack-label {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 0.05rem;
+}
+
+/* スタック／ロケーション */
+.stack {
+  font-size: clamp(0.8rem, 1.3vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #444;
+  margin: 0;
+  margin-bottom: 0.05rem;
+}
+
+.github {
+  display: inline-block;
+  margin-top: 0.1rem;
+  margin-bottom: 0.2rem; /* ← 上下を詰める */
+
+  font-size: 0.8rem;
+  font-weight: 500; /* stack と同じ */
+  letter-spacing: 0.08em;
+
+  color: #555; /* stack(#444) と location(#666) の中間 */
+
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.github::after {
+  content: " →";
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.github:hover {
+  color: #a97812; /* hover だけゴールド */
+  opacity: 0.9;
+}
+
+.github:hover::after {
+  opacity: 0.6;
+}
+
+.location,
+.education {
+  line-height: 1.4;
+}
+
+.location {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.education {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.9;
+  letter-spacing: 0.08em; /* 日本語は英語より狭め */
+  color: #777;
+}
+
+.contact-label {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 0.05rem;
+}
+
+.contact-mail {
+  display: inline-block;
+  margin-top: 0.05rem;
+  margin-bottom: 0.2rem; /* ← 上下を詰める */
+
+  font-size: 0.8rem;
+  font-weight: 500; /* stack と同じ */
+  letter-spacing: 0.08em;
+
+  color: #555; /* stack(#444) と location(#666) の中間 */
+
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.contact-mail::after {
+  content: " →";
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.contact-mail:hover {
+  color: #a97812; /* hover だけゴールド */
+  opacity: 0.9;
+}
+
+.contact-mail:hover::after {
+  opacity: 0.6;
+}
+
+.contact::after {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 1px;
+  margin-top: 0.6rem;
+  background: rgba(169, 120, 18, 0.6); /* 今のゴールド */
+}
+
+/* ===== モバイル微調整（重要） ===== */
+@media (max-width: 768px) {
+  .hero-layer {
+    width: 92vw;
+  }
+
+  .profile {
+    left: 50%;
+    top: 45%;
+    transform: translateX(-50%);
+    max-width: 92%;
+    text-align: center;
+  }
+
+  .name-ja {
+    font-size: clamp(1.8rem, 7.5vw, 2.6rem);
+    letter-spacing: 0.02em;
+  }
+
+  .name-en {
+    letter-spacing: 0.2em;
+  }
+
+  .role,
+  .stack,
+  .location {
+    font-size: clamp(0.8rem, 2.2vw, 1rem);
+  }
+}
+
+.scroll-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 150px;
+  z-index: 35;
+
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+
+  color: #666;
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* 下線（初期は見えない） */
+.scroll-indicator::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px; /* 文字からの距離 */
+  width: 100%;
+  height: 1px;
+
+  background: currentColor;
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.6);
+  transform-origin: center;
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* hover / focus */
+.scroll-indicator:hover,
+.scroll-indicator:focus-visible {
+  color: #a97812;
+  transform: translateX(-50%) translateY(-1px);
+}
+
+.scroll-indicator:hover::after,
+.scroll-indicator:focus-visible::after {
+  opacity: 0.6;
+  transform: translateX(-50%) scaleX(1);
+}
