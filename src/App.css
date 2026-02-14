@@ -1,62 +1,85 @@
-/* 全体はそのまま */
+/* body は単色背景にしておく（ページ全体のベース） */
 body {
   margin: 0;
   min-height: 100vh;
-  background-image: url("./assets/backgraund.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: #f7f7f7; /* or your preferred neutral color */
   font-family: "Montserrat", "Noto Sans JP", sans-serif;
 }
 
-/* 背景薄化レイヤー */
+/* もともと body::before で入れていた薄化レイヤーは .hero-layer に移動します（必要なら残す） */
 body::before {
+  content: none; /* もしくは削除 */
+}
+
+/* hero は画面幅いっぱいに */
+.hero-layer {
+  position: relative;
+  width: 100vw; /* ← 画面幅いっぱいに広げる */
+  min-height: 100vh;
+  left: 0;
+  margin: 0; /* 中央化の transform は削除 */
+  padding: 4rem 0; /* 上下余白。左右は内側で調整 */
+  background-image: url("./assets/backgraund.png");
+  background-size: cover; /* 画面全体を覆う（縦横比を維持） */
+  background-position: center center; /* 切り抜き位置を調整 */
+  background-repeat: no-repeat;
+  overflow: hidden; /* はみ出た画像を隠す */
+  z-index: 20;
+}
+
+/* 中身は幅を制限して中央に置く */
+.hero-inner {
+  width: min(1300px, 95vw); /* もともとの親幅 */
+  max-width: 1300px;
+  margin: 0 auto; /* これで中身が中央に来る */
+  position: relative; /* profile absolute の基準にする */
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 1.25rem; /* 内側の左右余白 */
+}
+
+/* hero の上に薄化レイヤーをのせたい場合（オプション） */
+.hero-layer::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(255, 255, 255, 0.25);
-  z-index: 0;
+  z-index: 5; /* overlay(img) より低め / profile より下 */
   pointer-events: none;
 }
 
-/* 親コンテナ（中央に置く箱） */
-.hero-layer {
-  position: fixed;
+.overlay {
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
+  transform: translate(-50%, -12.5%);
 
-  width: min(1300px, 95vw); /* 親幅を明示しておくのが重要 */
-  max-width: 1300px;
-  overflow: visible;
-}
-
-/* overlay は親幅にフィットさせる（imgの場合） */
-.overlay {
-  display: block;
-  width: 100%; /* 親の幅いっぱいに */
+  width: min(1300px, 95vw);
   height: auto;
-  opacity: 0.9;
+
+  object-fit: contain;
+  opacity: 0.85;
   pointer-events: none;
+  z-index: 10;
 }
 
-/* ===== profile（overlay の上に重ねる） ===== */
+/* profile: もし今の絶対配置で微調整したいなら absolute のままでOK。
+   ただし .hero-layer に transform が無いことが前提（今の修正でそうなります）。 */
 .profile {
-  position: absolute; /* hero-layer を基準に重ねる */
-  top: 20%; /* 好きな位置に調整 */
-  left: 15%; /* 親幅の左から 6% に合わせる（微調整用） */
+  position: absolute; /* すでに absolute を使っているならこのままでOK */
+  top: calc(37.5% + 80px); /* ← 内側余白ぶん足す */
+  left: calc(
+    50% - (min(1300px, 95vw) / 2) + 200px
+  ); /* 左の余白。必要に応じてパーセンテージで調整 */
   z-index: 30;
 
   text-align: left;
-  margin-top: 0.8rem;
-
+  margin-top: 0;
   font-size: 0.85rem;
   font-weight: 400;
   letter-spacing: 0.08em;
   color: #666;
 
-  /* 幅制限を入れると行折れが安定 */
   max-width: 48%;
   box-sizing: border-box;
 }
@@ -276,27 +299,25 @@ body::before {
   }
 }
 
+/* スクロールボタンはビューポート基準で下に置くほうが安定 */
 .scroll-indicator {
   position: absolute;
+  top: calc(37.5% + 550px); /* ← ここを調整 */
   left: 50%;
   transform: translateX(-50%);
-  bottom: 150px;
+  bottom: 6vh; /* px より vh の方がレスポンシブに安定 */
   z-index: 35;
 
   background: none;
   border: none;
-  box-shadow: none;
   padding: 0;
-
   font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-
   color: #666;
   cursor: pointer;
-
   transition:
     color 0.2s ease,
     opacity 0.2s ease,
