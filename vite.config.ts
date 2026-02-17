@@ -1,11 +1,12 @@
-// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  // プロジェクトページの場合はリポジトリ名（末尾スラッシュを忘れずに）
+  base: "/Portfolio/",
   plugins: [react()],
   build: {
-    outDir: "docs", // ← build 出力先を docs にする
-    emptyOutDir: true, // docs を上書きする
+    outDir: "docs",
+    emptyOutDir: true,
   },
 });
