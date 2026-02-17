@@ -11,31 +11,39 @@ body::before {
   content: none; /* もしくは削除 */
 }
 
-/* hero は画面幅いっぱいに */
+/* 親はビューポートいっぱいにして内部スクロールのみ許可しない */
 .hero-layer {
-  position: relative;
-  width: 100vw; /* ← 画面幅いっぱいに広げる */
-  min-height: 100vh;
-  left: 0;
-  margin: 0; /* 中央化の transform は削除 */
-  padding: 4rem 0; /* 上下余白。左右は内側で調整 */
+  position: relative; /* 既にあるならそのまま */
+  width: 100vw;
+  --scroll-offset: 80px; /* スクロール領域を上にずらす量 */
+  height: 100vh; /* ← ここを明示（min-height -> 固定高さ） */
+  margin: 0;
+  padding: 4rem 0;
+  overflow: hidden; /* 親はスクロールさせない */
   background-image: url("./assets/backgraund.png");
-  background-size: cover; /* 画面全体を覆う（縦横比を維持） */
-  background-position: center center; /* 切り抜き位置を調整 */
+  background-size: cover;
+  background-position: center center;
   background-repeat: no-repeat;
-  overflow: hidden; /* はみ出た画像を隠す */
-  z-index: 20;
+  background-attachment: fixed;
 }
 
-/* 中身は幅を制限して中央に置く */
+/* 内部だけスクロール可能にする */
 .hero-inner {
-  width: min(1300px, 95vw); /* もともとの親幅 */
+  width: min(1300px, 95vw);
   max-width: 1300px;
-  margin: 0 auto; /* これで中身が中央に来る */
-  position: relative; /* profile absolute の基準にする */
-  height: 100%;
+  margin: 0 auto;
+  position: relative; /* profile absolute の基準 */
+  height: calc(100vh + var(--scroll-offset)); /* ← スクロール領域を上にずらす */
+  margin-top: calc(-1 * var(--scroll-offset));
   box-sizing: border-box;
-  padding: 0 1.25rem; /* 内側の左右余白 */
+  padding: var(--scroll-offset) 1.25rem 0;
+  overflow-y: auto; /* ← ここで内部スクロールを有効に */
+  -webkit-overflow-scrolling: touch; /* モバイルでスムーズスクロール */
+}
+
+.hero-top {
+  position: relative;
+  height: 100vh;
 }
 
 /* hero の上に薄化レイヤーをのせたい場合（オプション） */
@@ -46,21 +54,6 @@ body::before {
   background: rgba(255, 255, 255, 0.25);
   z-index: 5; /* overlay(img) より低め / profile より下 */
   pointer-events: none;
-}
-
-.overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -12.5%);
-
-  width: min(1300px, 95vw);
-  height: auto;
-
-  object-fit: contain;
-  opacity: 0.85;
-  pointer-events: none;
-  z-index: 10;
 }
 
 /* profile: もし今の絶対配置で微調整したいなら absolute のままでOK。
@@ -302,11 +295,11 @@ body::before {
 /* スクロールボタンはビューポート基準で下に置くほうが安定 */
 .scroll-indicator {
   position: absolute;
-  top: calc(37.5% + 550px); /* ← ここを調整 */
+  top: calc(50% + 150px); /* ← ここを調整 */
   left: 50%;
   transform: translateX(-50%);
   bottom: 6vh; /* px より vh の方がレスポンシブに安定 */
-  z-index: 35;
+  z-index: 40;
 
   background: none;
   border: none;
@@ -354,4 +347,50 @@ body::before {
 .scroll-indicator:focus-visible::after {
   opacity: 0.6;
   transform: translateX(-50%) scaleX(1);
+}
+
+.hero-layer .profile {
+  position: absolute;
+  left: calc(50% - (min(1300px, 95vw) / 2) + 200px);
+  top: calc(50% - 280px);
+  max-width: 45%;
+  z-index: 30; /* overlay(25) の上に出す */
+  box-sizing: border-box;
+}
+
+.hero-layer,
+.hero-layer * {
+  /* 削除推奨（存在しなければそのままでOK） */
+  filter: none !important;
+  perspective: none !important;
+}
+
+/* about はスクロールで現れるセクション。1画面分の高さを確保 */
+.about-section {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 10rem 1.25rem 6rem; /* PROFILEと重ならないよう上を広めに */
+}
+
+/* overlay と profile はグローバル扱い*/
+
+/* overlay を hero-inner 基準で絶対配置（スクロールと一緒に動く） */
+.hero-layer > img.overlay,
+.hero-layer .overlay {
+  --overlay-shift-x: -10px;
+  --overlay-shift-y: 0px;
+  position: fixed;
+  top: 50%;
+  left: 50%; /* 横中央を基準に */
+  transform: translate(
+    calc(-50% + var(--overlay-shift-x)),
+    calc(-50% + var(--overlay-shift-y))
+  );
+  width: min(1300px, 95vw);
+  height: auto;
+  object-fit: contain;
+  z-index: 20; /* profile(30) より下、hero-layer::before(5) より上 */
+  pointer-events: none;
+  opacity: 0.85;
+  display: block;
 }

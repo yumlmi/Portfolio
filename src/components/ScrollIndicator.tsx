@@ -1,60 +1,41 @@
 import React from "react";
 
-type ScrollIndicatorProps = {
+type Props = {
   targetId: string;
-  addHash?: boolean;
 };
 
-const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
-  targetId,
-  addHash = true,
-}) => {
-  const handleScroll = (
-    e:
-      | React.MouseEvent<HTMLButtonElement>
-      | React.KeyboardEvent<HTMLButtonElement>,
-  ) => {
+export default function ScrollIndicator({ targetId }: Props) {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const target = document.getElementById(targetId);
+    // hero-inner をスクロールコンテナとして明示的に取得
+    const container = document.querySelector(".hero-inner");
+    const target = container?.querySelector(
+      `#${targetId}`,
+    ) as HTMLElement | null;
 
-    if (!target) {
-      console.warn(`Element with id="${targetId}" not found.`);
-      return;
-    }
-
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    if (addHash) {
-      const newHash = `#${targetId}`;
-      if (window.history && window.history.pushState) {
-        window.history.pushState(null, "", newHash);
-      } else {
-        window.location.hash = newHash;
-      }
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-      handleScroll(e);
+    if (container && target) {
+      // target が container の中にあることを前提にスクロール
+      // container.scrollTo を使ってスムースにスクロール（より確実）
+      const offsetTop = target.offsetTop - 100;
+      container.scrollTo({
+        top: Math.max(offsetTop, 0),
+        behavior: "smooth",
+      });
+      // 代替：target.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (target) {
+      // もし container が見つからない（フォールバック）
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
   return (
     <button
-      type="button"
       className="scroll-indicator"
-      onClick={handleScroll}
-      onKeyDown={handleKeyDown}
-      aria-label={`Scroll to ${targetId}`}
+      onClick={handleClick}
+      aria-label="Scroll to about"
     >
-      <span aria-hidden="true">Scroll</span>
+      Scroll
     </button>
   );
-};
-
-export default ScrollIndicator;
+}

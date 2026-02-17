@@ -1,44 +1,35 @@
+// src/pages/About.tsx
 import React from "react";
-import "./About.css"; // 下の CSS をこのファイルに入れてください（またはモジュール化してもOK）
+import "./About.css"; // About 固有スタイルがあれば
 
 const About: React.FC = () => {
   return (
     <>
-      <div className="hero-layer" role="region" aria-label="Hero">
-        <div
-          className="hero-inner"
-          tabIndex={0}
-          aria-label="Scrollable content"
-        >
-          <div className="profile">
-            <div className="profile-title">Profile</div>
-            {/* 実際のスクロールするテキストはここに入ります。
-                今は短くても OK。長文にすればスクロールバーが出ます。 */}
-            <div className="profile-body">
-              <p>山下 結実 — Frontend / Backend Engineer</p>
-              <p>
-                ここに長めのテキストを入れると、この領域だけスクロールします。
-                たとえば職務経歴や自己紹介、プロジェクトの説明など。
-              </p>
-              <p>
-                （ここにもっと段落を追加してスクロールの動きを確認してみてください。）
-              </p>
-              <p>段落4</p>
-              <p>段落5</p>
-              <p>段落6</p>
-              <p>段落7</p>
-              <p>段落8</p>
-            </div>
-          </div>
-        </div>
+      <div className="about-wrap">
+        <header className="about-header">
+          <p className="about-eyebrow">About</p>
+          <p className="about-lead">
+            フロントエンドを中心に、フルスタックもできるエンジニアを目指す大学生。
+            <br />
+            近畿大学 情報学部 実世界コンピューティングコースに在学中。
+          </p>
+        </header>
 
-        {/* overlay は既に中央に配置済み（overlay.png） */}
-        <img
-          src="./assets/overlay.png"
-          alt=""
-          className="overlay"
-          aria-hidden="true"
-        />
+        <div className="about-body">
+          <p>
+            大学に入ってからプログラミングを学び始め、今はWebアプリケーション開発を
+            じっくり勉強している。
+          </p>
+          <p>
+            ものづくりの中でも、見やすさや使いやすさを大切にしたUIが特に好き。
+            しっかり意図を汲み取って、丁寧に仕上げることを心がけている。
+          </p>
+          <p>
+            音楽をずっと続けていて、幼稚園の頃にピアノを始めた。
+            今は大学の交響楽団でチェロを弾いていて、楽器を変えながら音楽を楽しんでいる。
+          </p>
+          <p>好きな楽器はギターとドラム。</p>
+        </div>
       </div>
     </>
   );
