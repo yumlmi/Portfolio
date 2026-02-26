@@ -20,7 +20,7 @@ body::before {
   margin: 0;
   padding: 4rem 0;
   overflow: hidden; /* 親はスクロールさせない */
-  background-image: url("./assets/backgraund.png");
+  background-image: url("./assets/background.png");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -60,7 +60,7 @@ body::before {
    ただし .hero-layer に transform が無いことが前提（今の修正でそうなります）。 */
 .profile {
   position: absolute; /* すでに absolute を使っているならこのままでOK */
-  top: calc(37.5% + 80px); /* ← 内側余白ぶん足す */
+  top: calc(50% - 280px);
   left: calc(
     50% - (min(1300px, 95vw) / 2) + 200px
   ); /* 左の余白。必要に応じてパーセンテージで調整 */
@@ -73,7 +73,7 @@ body::before {
   letter-spacing: 0.08em;
   color: #666;
 
-  max-width: 48%;
+  max-width: 45%;
   box-sizing: border-box;
 }
 
@@ -347,15 +347,6 @@ body::before {
 .scroll-indicator:focus-visible::after {
   opacity: 0.6;
   transform: translateX(-50%) scaleX(1);
-}
-
-.hero-layer .profile {
-  position: absolute;
-  left: calc(50% - (min(1300px, 95vw) / 2) + 200px);
-  top: calc(50% - 280px);
-  max-width: 45%;
-  z-index: 30; /* overlay(25) の上に出す */
-  box-sizing: border-box;
 }
 
 .hero-layer,

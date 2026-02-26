@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ScrollIndicator from "./components/ScrollIndicator";
 import overlay from "./assets/overlay.png";
 import "./App.css";
 import About from "./pages/About";
 
 function App() {
+  const heroInnerRef = useRef<HTMLDivElement>(null);
+  const aboutSectionRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
-    const container = document.querySelector(
-      ".hero-inner",
-    ) as HTMLElement | null;
+    const container = heroInnerRef.current;
     if (container) {
       container.scrollTo({ top: 0, behavior: "auto" });
     }
@@ -20,7 +21,7 @@ function App() {
       <div className="hero-layer">
         {/* overlay画像（固定背景） */}
         <img src={overlay} alt="" className="overlay" aria-hidden="true" />
-        <div className="hero-inner">
+        <div className="hero-inner" ref={heroInnerRef}>
           <div className="hero-top">
             <div className="profile">
               <div className="profile-title">Profile</div>
@@ -54,11 +55,15 @@ function App() {
             </div>
 
             {/* hero-inner の中に about を置くことで内部スクロールで見えるようにする */}
-            <ScrollIndicator targetId="about" />
+            <ScrollIndicator
+              targetId="about"
+              containerRef={heroInnerRef}
+              targetRef={aboutSectionRef}
+            />
           </div>
 
           {/* ここに #about を配置（about セクションは hero-inner の外ではなく中） */}
-          <section id="about" className="about-section">
+          <section id="about" className="about-section" ref={aboutSectionRef}>
             <About />
           </section>
         </div>
