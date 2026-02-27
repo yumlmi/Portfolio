@@ -51,7 +51,7 @@ body::before {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
-  scroll-padding-top: 100px;
+  scroll-padding-top: 50px;
   scroll-behavior: smooth;
   overscroll-behavior-y: contain;
   -ms-overflow-style: none;

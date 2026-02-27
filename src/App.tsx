@@ -7,7 +7,7 @@ import Works from "./pages/Works";
 import Skills from "./pages/Skills";
 
 function App() {
-  const SECTION_OFFSET_PX = 100;
+  const SECTION_OFFSET_PX = 50;
 
   const heroInnerRef = useRef<HTMLDivElement>(null);
   const heroTopRef = useRef<HTMLDivElement>(null);
