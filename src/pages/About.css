@@ -1,7 +1,8 @@
 .about-section {
-  min-height: 100vh;
+  height: 100svh;
+  min-height: 100svh;
   box-sizing: border-box;
-  padding: 5rem 1.25rem 7rem;
+  padding: 5rem 1.25rem 4rem;
   scroll-margin-top: calc(var(--scroll-offset, 0px) + 240px);
   display: block;
   position: relative;
@@ -12,15 +13,16 @@
 }
 
 .about-wrap {
-  width: min(1300px, 95vw);
-  max-width: 1300px;
-  margin: 0 auto 0 calc(50% - (min(1300px, 95vw) / 2) + 200px);
+  width: min(820px, 100%);
+  max-width: 820px;
+  margin: 0 auto;
   box-sizing: border-box;
+  padding-left: 0;
 }
 
 .about-header {
-  margin-bottom: 3rem;
-  max-width: 820px;
+  margin: 0 auto 3rem;
+  max-width: 100%;
 }
 
 .about-eyebrow {
@@ -48,7 +50,8 @@
 }
 
 .about-body {
-  max-width: 820px;
+  max-width: 100%;
+  margin: 0 auto;
   background: rgba(248, 249, 250, 0.32);
   border: 1px solid rgba(169, 120, 18, 0.18);
   border-radius: 16px;
@@ -74,13 +77,15 @@
 /* 小さめのスクリーン対応 */
 @media (max-width: 920px) {
   .about-wrap {
-    margin-left: auto;
+    width: min(820px, 100%);
   }
 }
 
 @media (max-width: 720px) {
   .about-section {
-    padding: 4.5rem 1rem 5rem;
+    height: 100svh;
+    min-height: 100svh;
+    padding: 4rem 1rem 3rem;
   }
 
   .about-header,

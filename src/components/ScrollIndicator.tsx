@@ -20,14 +20,19 @@ export default function ScrollIndicator({
       | null;
     const target = targetRef.current ?? fallbackTarget;
 
-    if (container && target) {
-      const offsetTop = target.offsetTop - 100;
-      container.scrollTo({
-        top: Math.max(offsetTop, 0),
-        behavior: "smooth",
-      });
-    } else if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (target) {
+      const hasInternalScroll =
+        !!container && container.scrollHeight > container.clientHeight + 1;
+
+      if (hasInternalScroll && container) {
+        const offsetTop = target.offsetTop - 100;
+        container.scrollTo({
+          top: Math.max(offsetTop, 0),
+          behavior: "smooth",
+        });
+      } else {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
 
